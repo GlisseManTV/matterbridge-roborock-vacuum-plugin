@@ -3,6 +3,7 @@ import { AnsiLogger, debugStringify } from 'matterbridge/logger';
 import { BehaviorDeviceGeneric, BehaviorRoborock, CommandNames, DeviceCommands } from '../../BehaviorDeviceGeneric.js';
 import RoborockService from '../../../roborockService.js';
 import { CleanModeSettings } from '../../../model/ExperimentalFeatureSetting.js';
+import { CleanModeDTO } from '@/behaviors/CleanModeDTO.js';
 
 export interface DefaultEndpointCommands extends DeviceCommands {
   selectAreas: (newAreas: number[]) => MaybePromise;
@@ -57,7 +58,7 @@ export const RvcRunMode: Record<number, string> = {
   [3]: 'Mapping',
 };
 
-export const RvcCleanMode: Record<number, string> = {
+export const DefaultRvcCleanMode: Record<number, string> = {
   [5]: 'Mop & Vacuum: Default',
   [6]: 'Mop & Vacuum: Quick',
   [7]: 'Mop & Vacuum: Max',
@@ -79,14 +80,7 @@ export const RvcCleanMode: Record<number, string> = {
   [99]: 'Go Vacation',
 };
 
-export interface CleanModeSetting {
-  suctionPower: number;
-  waterFlow: number;
-  distance_off: number;
-  mopRoute: number | undefined;
-}
-
-export const CleanSetting: Record<number, CleanModeSetting> = {
+export const DefaultCleanSetting: Record<number, CleanModeDTO> = {
   [5]: { suctionPower: VacuumSuctionPower.Balanced, waterFlow: MopWaterFlow.Medium, distance_off: 0, mopRoute: MopRoute.Standard }, // 'Vac & Mop Default'
   [6]: { suctionPower: VacuumSuctionPower.Balanced, waterFlow: MopWaterFlow.Medium, distance_off: 0, mopRoute: MopRoute.Fast }, // 'Vac & Mop Quick'
 
@@ -125,7 +119,7 @@ export function setDefaultCommandHandler(
   cleanModeSettings: CleanModeSettings | undefined,
 ): void {
   handler.setCommandHandler(CommandNames.CHANGE_TO_MODE, async (newMode: number) => {
-    const activity = RvcRunMode[newMode] || RvcCleanMode[newMode];
+    const activity = RvcRunMode[newMode] || DefaultRvcCleanMode[newMode];
     switch (activity) {
       case 'Cleaning': {
         logger.notice('DefaultBehavior-ChangeRunMode to: ', activity);
@@ -140,7 +134,7 @@ export function setDefaultCommandHandler(
       }
 
       case 'Mop & Vacuum: Custom': {
-        const setting = CleanSetting[newMode];
+        const setting = DefaultCleanSetting[newMode];
         logger.notice(`DefaultBehavior-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting)}`);
         await roborockService.changeCleanMode(duid, setting);
         break;
@@ -149,7 +143,7 @@ export function setDefaultCommandHandler(
       case 'Mop & Vacuum: Default':
       case 'Mop: Default':
       case 'Vacuum: Default': {
-        const setting = cleanModeSettings ? (getSettingFromCleanMode(activity, cleanModeSettings) ?? CleanSetting[newMode]) : CleanSetting[newMode];
+        const setting = cleanModeSettings ? (getSettingFromCleanMode(activity, cleanModeSettings) ?? DefaultCleanSetting[newMode]) : DefaultCleanSetting[newMode];
         logger.notice(`DefaultBehavior-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting ?? {})}`);
         if (setting) {
           await roborockService.changeCleanMode(duid, setting);
@@ -169,7 +163,7 @@ export function setDefaultCommandHandler(
       case 'Vacuum: Min':
       case 'Vacuum: Quiet':
       case 'Vacuum: Quick': {
-        const setting = CleanSetting[newMode];
+        const setting = DefaultCleanSetting[newMode];
         logger.notice(`DefaultBehavior-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting ?? {})}`);
         if (setting) {
           await roborockService.changeCleanMode(duid, setting);
@@ -219,7 +213,7 @@ const DISTANCE_OFF_DEFAULT = 25;
  * @param cleanModeSettings - Optional user-configured clean mode settings
  * @returns Clean mode setting configuration or undefined if activity not recognized
  */
-export const getSettingFromCleanMode = (activity: string, cleanModeSettings?: CleanModeSettings): CleanModeSetting | undefined => {
+export const getSettingFromCleanMode = (activity: string, cleanModeSettings?: CleanModeSettings): CleanModeDTO | undefined => {
   switch (activity) {
     case 'Mop: Default': {
       const mopSetting = cleanModeSettings?.mopping;

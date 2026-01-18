@@ -1,16 +1,26 @@
 import { AnsiLogger } from 'matterbridge/logger';
-import ClientManager from './clientManager.js';
-import { Device, Home, Protocol, UserData, RoborockIoTApi, RoborockAuthenticateApi, ClientRouter, MessageProcessor, Client, SceneParam } from '../roborockCommunication/index.js';
-import { LocalNetworkClient } from '../roborockCommunication/broadcast/client/LocalNetworkClient.js';
-import type { DeviceNotifyCallback, Factory } from '../types/index.js';
-import { DeviceError, DeviceNotFoundError, DeviceConnectionError, DeviceInitializationError } from '../errors/index.js';
-import { CONNECTION_RETRY_DELAY_MS, MAX_CONNECTION_ATTEMPTS } from '../constants/index.js';
-import { PingResponseListener } from '../roborockCommunication/broadcast/listener/implementation/pingResponseListener.js';
-import { StatusMessageListener } from '../roborockCommunication/broadcast/listener/implementation/statusMessageListener.js';
-import { ProtocolVersion } from '../roborockCommunication/Zenum/protocolVersion.js';
-import { MessageRoutingService } from './index.js';
-import { SimpleMessageHandler } from '../roborockCommunication/broadcast/handler/simpleMessageHandler.js';
-import { MapResponseListener } from '../roborockCommunication/broadcast/listener/implementation/mapResponseListener.js';
+import {
+  LocalNetworkClient,
+  Device,
+  Home,
+  Protocol,
+  UserData,
+  RoborockIoTApi,
+  RoborockAuthenticateApi,
+  ClientRouter,
+  MessageProcessor,
+  Client,
+  SceneParam,
+  PingResponseListener,
+  StatusMessageListener,
+  ProtocolVersion,
+  SimpleMessageHandler,
+  MapResponseListener,
+} from '@/roborockCommunication/index.js';
+import type { DeviceNotifyCallback, Factory } from '@/types/index.js';
+import { DeviceError, DeviceNotFoundError, DeviceConnectionError, DeviceInitializationError } from '@/errors/index.js';
+import { CONNECTION_RETRY_DELAY_MS, MAX_CONNECTION_ATTEMPTS } from '@/constants/index.js';
+import { MessageRoutingService, ClientManager } from './index.js';
 
 /** Handles device discovery, initialization, and lifecycle. */
 export class DeviceManagementService {

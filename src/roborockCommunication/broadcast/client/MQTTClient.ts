@@ -1,12 +1,9 @@
 import mqtt, { ErrorWithReasonCode, IConnackPacket, ISubscriptionGrant, MqttClient as MqttLibClient } from 'mqtt';
 import * as CryptoUtils from '../../helper/cryptoHelper.js';
-import { RequestMessage } from '../model/requestMessage.js';
-import { AbstractClient } from '../abstractClient.js';
-import { MessageContext } from '../model/messageContext.js';
-import { Rriot, UserData } from '../../Zmodel/userData.js';
+import { SyncMessageListener, Rriot, UserData, RequestMessage, MessageContext } from '@/roborockCommunication/index.js';
 import { AnsiLogger, debugStringify } from 'matterbridge/logger';
-import { KEEPALIVE_INTERVAL_MS } from '../../../constants/index.js';
-import { SyncMessageListener } from '../listener/implementation/syncMessageListener.js';
+import { KEEPALIVE_INTERVAL_MS } from '@/constants/index.js';
+import { AbstractClient } from '../abstractClient.js';
 
 export class MQTTClient extends AbstractClient {
   protected override clientName = 'MQTTClient';

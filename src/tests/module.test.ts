@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AnsiLogger, LogLevel } from 'matterbridge/logger';
-import { PlatformMatterbridge } from 'matterbridge';
-import { RoborockMatterbridgePlatform, RoborockPluginPlatformConfig } from '../module.js';
-import { MatterbridgeDynamicPlatform } from 'matterbridge';
+import { PlatformMatterbridge, MatterbridgeDynamicPlatform } from 'matterbridge';
 import NodePersist from 'node-persist';
+import { RoborockMatterbridgePlatform, RoborockPluginPlatformConfig } from '@/module.js';
 import RoborockService from '@/roborockService.js';
 
 // Mocks

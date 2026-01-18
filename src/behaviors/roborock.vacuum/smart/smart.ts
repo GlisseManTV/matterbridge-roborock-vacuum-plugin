@@ -3,7 +3,8 @@ import { AnsiLogger, debugStringify } from 'matterbridge/logger';
 import { BehaviorDeviceGeneric, BehaviorRoborock, CommandNames, DeviceCommands } from '../../BehaviorDeviceGeneric.js';
 import RoborockService from '../../../roborockService.js';
 import { CleanModeSettings } from '../../../model/ExperimentalFeatureSetting.js';
-import { RvcCleanMode as DefaultRvcCleanMode, CleanSetting as DefaultCleanSetting, getSettingFromCleanMode, RvcRunMode, CleanModeSetting } from '../default/default.js';
+import { DefaultRvcCleanMode, DefaultCleanSetting, getSettingFromCleanMode, RvcRunMode } from '../default/default.js';
+import { CleanModeDTO } from '@/behaviors/index.js';
 
 export interface EndpointCommandsSmart extends DeviceCommands {
   selectAreas: (newAreas: number[] | undefined) => MaybePromise;
@@ -55,13 +56,13 @@ export enum MopRouteSmart {
   Smart = 306,
 }
 
-export const RvcCleanMode: Record<number, string> = {
+export const SmartRvcCleanMode: Record<number, string> = {
   [4]: 'Smart Plan',
   ...DefaultRvcCleanMode,
 };
 
 // { suctionPower: [ 102 ], waterFlow: 200, distance_off: 0, mopRoute: [ 102 ] }
-export const CleanSetting: Record<number, CleanModeSetting> = {
+export const SmartCleanSetting: Record<number, CleanModeDTO> = {
   [4]: { suctionPower: 0, waterFlow: 0, distance_off: 0, mopRoute: MopRouteSmart.Smart }, // 'Smart Plan'
   ...DefaultCleanSetting,
 };
@@ -83,7 +84,7 @@ export function setCommandHandlerSmart(
   cleanModeSettings: CleanModeSettings | undefined,
 ): void {
   handler.setCommandHandler(CommandNames.CHANGE_TO_MODE, async (newMode: number) => {
-    const activity = RvcRunMode[newMode] || RvcCleanMode[newMode];
+    const activity = RvcRunMode[newMode] || SmartRvcCleanMode[newMode];
     switch (activity) {
       case 'Cleaning': {
         logger.notice('BehaviorSmart-ChangeRunMode to: ', activity);
@@ -99,7 +100,7 @@ export function setCommandHandlerSmart(
 
       case 'Smart Plan':
       case 'Mop & Vacuum: Custom': {
-        const setting = CleanSetting[newMode];
+        const setting = SmartCleanSetting[newMode];
         logger.notice(`BehaviorSmart-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting)}`);
         await roborockService.changeCleanMode(duid, setting);
         break;
@@ -108,7 +109,7 @@ export function setCommandHandlerSmart(
       case 'Mop & Vacuum: Default':
       case 'Mop: Default':
       case 'Vacuum: Default': {
-        const setting = cleanModeSettings ? (getSettingFromCleanMode(activity, cleanModeSettings) ?? CleanSetting[newMode]) : CleanSetting[newMode];
+        const setting = cleanModeSettings ? (getSettingFromCleanMode(activity, cleanModeSettings) ?? SmartCleanSetting[newMode]) : SmartCleanSetting[newMode];
         logger.notice(`BehaviorSmart-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting ?? {})}`);
         if (setting) {
           await roborockService.changeCleanMode(duid, setting);
@@ -128,7 +129,7 @@ export function setCommandHandlerSmart(
       case 'Vacuum: Min':
       case 'Vacuum: Quiet':
       case 'Vacuum: Quick': {
-        const setting = CleanSetting[newMode];
+        const setting = SmartCleanSetting[newMode];
         logger.notice(`BehaviorSmart-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting ?? {})}`);
         if (setting) {
           await roborockService.changeCleanMode(duid, setting);

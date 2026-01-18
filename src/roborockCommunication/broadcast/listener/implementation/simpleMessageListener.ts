@@ -1,7 +1,4 @@
-import { ResponseMessage } from '../../model/responseMessage.js';
-import { AbstractMessageListener } from '../index.js';
-import { Protocol } from '../../model/protocol.js';
-import { AbstractMessageHandler } from '../abstractMessageHandler.js';
+import { ResponseMessage, Protocol, AbstractMessageListener, AbstractMessageHandler } from '../../index.js';
 
 export class SimpleMessageListener implements AbstractMessageListener {
   private readonly ignoredProtocols: Protocol[] = [Protocol.rpc_response, Protocol.map_response];
