@@ -533,9 +533,12 @@ describe('RoborockMatterbridgePlatform', () => {
     platform.platformRunner = undefined;
     platform.roborockService = undefined;
     await platform['onConfigureDevice']();
+    expect(mockLogger.error).toHaveBeenCalledWith('Initializing: PlatformRunner or RoborockService is undefined');
+
     platform.platformRunner = {} as any;
     platform.roborockService = {} as any;
     platform.devices = new Map();
     await platform['onConfigureDevice']();
+    expect(mockLogger.error).toHaveBeenCalledWith('Initializing: No supported devices found');
   });
 });
