@@ -3,7 +3,7 @@ import { AnsiLogger, debugStringify } from 'matterbridge/logger';
 import { BehaviorDeviceGeneric, BehaviorRoborock, CommandNames, DeviceCommands } from '../../BehaviorDeviceGeneric.js';
 import RoborockService from '../../../roborockService.js';
 import { CleanModeSettings } from '../../../model/ExperimentalFeatureSetting.js';
-import { DefaultRvcCleanMode, DefaultCleanSetting, getSettingFromCleanMode, VacuumSuctionPower } from '../default/default.js';
+import { DefaultRvcCleanMode, DefaultCleanSetting, getSettingFromCleanMode } from '../default/default.js';
 import { CleanModeDTO, RvcRunMode } from '@/behaviors/index.js';
 
 export interface EndpointCommandsSmart extends DeviceCommands {
