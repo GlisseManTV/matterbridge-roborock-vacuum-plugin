@@ -124,11 +124,7 @@ describe('SyncMessageListener', () => {
     listener.waitFor(messageId, { method: 'test' } as RequestMessage, resolve, reject);
 
     const dpsData = { id: messageId, result: { foo: 'bar' } };
-    const message = new ResponseMessage(
-      'YBqkooSOUKiJd5HiCFOAS',
-      { version: '1.0', seq: 932, nonce: 29, timestamp: 1768267610, protocol: 102, isForProtocol: (p: Protocol) => p === Protocol.general_request } as any,
-      { data: { 121: 5 }, get: (index: number | string | Protocol) => dpsData } as any,
-    );
+    const message = new ResponseMessage('YBqkooSOUKiJd5HiCFOAS', new HeaderMessage('1.0', 932, 29, 1768267610, 4), new ResponseBody({ 4: dpsData }));
 
     await listener.onMessage(message);
 
