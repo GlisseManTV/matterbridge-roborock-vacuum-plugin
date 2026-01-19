@@ -28,4 +28,8 @@ export class ResponseMessage {
   public isForStatus(status: number): boolean {
     return this.body !== undefined && this.body.get(status) !== undefined;
   }
+
+  public isForStatuses(statuses: number[]): boolean {
+    return statuses.some((status) => this.isForStatus(status));
+  }
 }

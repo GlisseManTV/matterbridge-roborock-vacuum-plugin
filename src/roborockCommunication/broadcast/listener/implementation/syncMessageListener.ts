@@ -45,7 +45,7 @@ export class SyncMessageListener implements AbstractMessageListener {
       }
 
       const statusProtocolNumbers = [Protocol.suction_power, Protocol.water_box_mode];
-      if (message.isForProtocol(Protocol.rpc_response) && statusProtocolNumbers.some((p) => message.isForProtocol(p))) {
+      if (message.isForProtocol(Protocol.rpc_response) && message.isForStatuses(statusProtocolNumbers)) {
         // skip message handling for status updates because they will be handled at statusMessageListener
         return;
       }
