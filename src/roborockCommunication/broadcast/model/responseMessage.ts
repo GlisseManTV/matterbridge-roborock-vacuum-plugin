@@ -13,8 +13,8 @@ export class ResponseMessage {
     this.header = header;
   }
 
-  public get<T>(index: Protocol): T | undefined {
-    return this.body?.get(index) as T | undefined;
+  public get<T>(index: Protocol): T {
+    return this.body?.get(index) as T;
   }
 
   public isForProtocol(protocol: Protocol): boolean {

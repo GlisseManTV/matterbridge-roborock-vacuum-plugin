@@ -62,7 +62,7 @@ export class ConnectionService {
           }
 
           if (message instanceof ResponseMessage && message.isForProtocol(Protocol.hello_response)) {
-            const dps = message.get(Protocol.hello_response) as DpsPayload;
+            const dps = message.get<DpsPayload>(Protocol.hello_response);
             const result = dps.result as Security;
             this.messageClient?.updateNonce(message.duid, result.nonce);
           }
