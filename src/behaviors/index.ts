@@ -6,3 +6,4 @@ export * from './roborock.vacuum/smart/smart.js';
 export * from './roborock.vacuum/smart/initialData.js';
 export * from './roborock.vacuum/smart/runtimes.js';
 export * from './CleanModeDTO.js';
+export * from './RvcRunMode.js';

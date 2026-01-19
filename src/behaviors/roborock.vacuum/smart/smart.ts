@@ -3,8 +3,8 @@ import { AnsiLogger, debugStringify } from 'matterbridge/logger';
 import { BehaviorDeviceGeneric, BehaviorRoborock, CommandNames, DeviceCommands } from '../../BehaviorDeviceGeneric.js';
 import RoborockService from '../../../roborockService.js';
 import { CleanModeSettings } from '../../../model/ExperimentalFeatureSetting.js';
-import { DefaultRvcCleanMode, DefaultCleanSetting, getSettingFromCleanMode, RvcRunMode } from '../default/default.js';
-import { CleanModeDTO } from '@/behaviors/index.js';
+import { DefaultRvcCleanMode, DefaultCleanSetting, getSettingFromCleanMode, VacuumSuctionPower } from '../default/default.js';
+import { CleanModeDTO, RvcRunMode } from '@/behaviors/index.js';
 
 export interface EndpointCommandsSmart extends DeviceCommands {
   selectAreas: (newAreas: number[] | undefined) => MaybePromise;
@@ -70,11 +70,6 @@ export const SmartCleanSetting: Record<number, CleanModeDTO> = {
 /**
  * Register command handlers for smart device behavior.
  * Smart models support additional 'Smart Plan' mode and enhanced clean mode mappings.
- * @param duid - Device unique identifier
- * @param handler - Behavior handler to register commands on
- * @param logger - Logger instance for command execution logging
- * @param roborockService - Service for device communication
- * @param cleanModeSettings - Optional custom clean mode configuration
  */
 export function setCommandHandlerSmart(
   duid: string,
@@ -109,7 +104,7 @@ export function setCommandHandlerSmart(
       case 'Mop & Vacuum: Default':
       case 'Mop: Default':
       case 'Vacuum: Default': {
-        const setting = cleanModeSettings ? (getSettingFromCleanMode(activity, cleanModeSettings) ?? SmartCleanSetting[newMode]) : SmartCleanSetting[newMode];
+        const setting = getSettingFromCleanMode(activity, cleanModeSettings) ?? SmartCleanSetting[newMode];
         logger.notice(`BehaviorSmart-ChangeCleanMode to: ${activity}, setting: ${debugStringify(setting ?? {})}`);
         if (setting) {
           await roborockService.changeCleanMode(duid, setting);
