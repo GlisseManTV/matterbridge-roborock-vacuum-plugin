@@ -4,13 +4,14 @@ import { MessageContext, RequestMessage } from './model/index.js';
 import { UserData } from '../Zmodel/userData.js';
 import { Client } from './client.js';
 import { LocalNetworkClient, MQTTClient } from './client/index.js';
+import { AbstractClient } from './abstractClient.js';
 
 export class ClientRouter implements Client {
   protected readonly connectionListeners = new ChainedConnectionListener();
   protected readonly messageListeners = new ChainedMessageListener();
 
   private readonly context: MessageContext;
-  private readonly localClients = new Map<string, LocalNetworkClient>();
+  private readonly localClients = new Map<string, AbstractClient>();
   private readonly logger: AnsiLogger;
   private mqttClient: MQTTClient;
 
