@@ -10,6 +10,10 @@ class TestClient extends AbstractClient {
     this.initializeConnectionStateListener();
   }
 
+  override isReady(): boolean {
+    return true;
+  }
+
   override connect(): void {
     this.connected = true;
   }

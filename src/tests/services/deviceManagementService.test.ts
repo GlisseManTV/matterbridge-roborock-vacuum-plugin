@@ -759,7 +759,7 @@ describe('DeviceManagementService', () => {
     });
   });
 
-  describe('initializeMessageClientForLocal', () => {
+  describe('initializeMessageClientForLocal B01 case', () => {
     it('should initialize UDP client for B01 protocol device', async () => {
       const b01Device = { ...mockDevice, pv: ProtocolVersion.B01 };
 
